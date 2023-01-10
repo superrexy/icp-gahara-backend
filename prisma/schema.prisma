@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model users {
+    id         Int      @id @default(autoincrement())
+    full_name  String   @db.VarChar(255)
+    no_ktp     String   @unique @db.VarChar(255)
+    address    String?  @db.VarChar(255)
+    phone      String?  @db.VarChar(255)
+    email      String   @unique @db.VarChar(255)
+    password   String   @db.VarChar(255)
+    role       String   @db.VarChar(255)
+    user_image String?  @db.VarChar(255)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    orders     orders[]
+}
+
+model cars {
+    id          Int      @id @default(autoincrement())
+    name        String   @db.VarChar(255)
+    description String   @db.VarChar(255)
+    price       Float    @db.Float
+    seats       Int      @db.Int
+    image       String   @db.VarChar(255)
+    type_fuel   String   @db.VarChar(255)
+    type_car    String   @db.VarChar(255)
+    transmision String   @db.VarChar(255)
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
+    orders      orders[]
+}
+
+model location {
+    id         Int      @id @default(autoincrement())
+    address    String   @db.VarChar(255)
+    latitude   Float    @db.Float
+    longitude  Float    @db.Float
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+}
+
+model orders {
+    id              Int      @id @default(autoincrement())
+    name_rent       String   @db.VarChar(255)
+    no_ktp          String   @db.VarChar(255)
+    address         String?  @db.VarChar(255)
+    phone           String   @db.VarChar(255)
+    rental_purposes String   @db.VarChar(255)
+    start_date      DateTime @db.Date
+    end_date        DateTime @db.Date
+    total_price     Float    @db.Float
+    status          Status   @default(ACTIVE)
+    car_id          Int
+    car             cars     @relation(fields: [car_id], references: [id])
+    user_id         Int
+    user            users    @relation(fields: [user_id], references: [id])
+    created_at      DateTime @default(now())
+    updated_at      DateTime @updatedAt
+}
+
+enum Status {
+    ACTIVE
+    INACTIVE
+}
