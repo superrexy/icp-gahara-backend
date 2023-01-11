@@ -2,8 +2,8 @@ version: "3.3"
 
 services:
   api:
-    container_name: admin-cafe-api
-    image: bintangrezeka/admin-cafe-api:latest
+    container_name: icp-gahara-backend
+    image: bintangrezeka/icp-gahara-backend:latest
     restart: always
     env_file:
       - .env
