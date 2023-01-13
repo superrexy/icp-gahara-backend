@@ -19,16 +19,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/public", express.static(path.join(__dirname, "public")));
 
-if (process.env.NODE_ENV === "development") {
-  console.log("Development Mode");
-  const swaggerUi = require("swagger-ui-express");
-  const swaggerFile = require("./swagger_output.json");
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-}
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Index Route
 app.get("/", (req, res) => {
-  return res.send("ICP Gahara Backend");
+    return res.send("ICP Gahara Backend");
 });
 
 // API Routes
@@ -39,10 +37,10 @@ app.use(`${URL_PREFIX_API_V1}`, carsRouter);
 app.use(`${URL_PREFIX_API_V1}`, ordersRouter);
 
 app.use((req, res, next) => {
-  return res.status(404).json({
-    status: false,
-    message: "PAGE_NOT_FOUND",
-  });
+    return res.status(404).json({
+        status: false,
+        message: "PAGE_NOT_FOUND",
+    });
 });
 
 module.exports = app;

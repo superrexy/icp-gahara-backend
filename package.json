@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node swagger && node ./bin/www",
     "dev": "node swagger && NODE_ENV=development nodemon ./bin/www",
     "cy:run": "NODE_ENV=development prisma migrate reset -f && cypress run",
     "cy:open": "NODE_ENV=development prisma migrate reset -f && cypress open",
