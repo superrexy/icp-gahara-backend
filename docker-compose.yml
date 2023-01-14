@@ -22,9 +22,9 @@ services:
     image: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: passwordRexy2022
-      MARIADB_USER: bintangrezeka
-      MARIADB_PASSWORD: passwordRexy2022
+      MARIADB_ROOT_PASSWORD: icpgahara2023
+      MARIADB_USER: icpgahara
+      MARIADB_PASSWORD: icpgahara2023
     ports:
       - 3306:3306
     volumes:
