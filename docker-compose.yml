@@ -16,7 +16,7 @@ services:
     volumes:
       - ./public:/usr/src/app/public/
     depends_on:
-      - database
+      - mariadb-sql
   mariadb-sql:
     container_name: mariadb-sql
     image: mariadb
