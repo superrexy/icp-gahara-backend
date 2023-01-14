@@ -39,4 +39,4 @@ services:
       - 8080:80
     environment:
       - PMA_ARBITRARY=0
-      - PMA_HOST=mariadb-sql
+      - PMA_HOST=database
