@@ -4,7 +4,7 @@ const adminMiddleware = require("../../middleware/admin");
 const uploadFile = require("../../helpers/upload_file.helpers");
 const router = express.Router();
 
-const store = uploadFile.single("car_image");
+const storeMultiple = uploadFile.array("images", 5);
 
 const {
   createCar,
@@ -12,18 +12,36 @@ const {
   getCar,
   getCars,
   updateCar,
+  deleteImageCar,
 } = require("./cars.controller");
 
 router.get("/cars", authMiddleware, getCars);
+
 router.get("/cars/:id", authMiddleware, getCar);
-router.post("/cars/create", authMiddleware, adminMiddleware, store, createCar);
+
+router.post(
+  "/cars/create",
+  authMiddleware,
+  adminMiddleware,
+  storeMultiple,
+  createCar
+);
+
 router.put(
   "/cars/:id/update",
   authMiddleware,
   adminMiddleware,
-  store,
+  storeMultiple,
   updateCar
 );
+
 router.delete("/cars/:id/delete", authMiddleware, adminMiddleware, deleteCar);
+
+router.delete(
+  "/cars/:id/images/:image_id/delete",
+  authMiddleware,
+  adminMiddleware,
+  deleteImageCar
+);
 
 module.exports = router;

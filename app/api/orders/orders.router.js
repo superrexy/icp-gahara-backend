@@ -8,20 +8,24 @@ const {
   getOrder,
   createOrder,
   deleteOrder,
-  updateOrder,
   doneOrder,
+  midtransNotification,
+  getOrderPayment,
 } = require("./orders.controller");
 
 router.get("/orders", authMiddleware, getOrders);
 router.get("/orders/:id", authMiddleware, getOrder);
+router.get("/orders/:id/payment", authMiddleware, getOrderPayment);
 router.get("/orders/:id/done", authMiddleware, adminMiddleware, doneOrder);
 router.post("/orders/create", authMiddleware, createOrder);
-router.put("/orders/:id/update", authMiddleware, adminMiddleware, updateOrder);
 router.delete(
   "/orders/:id/delete",
   authMiddleware,
   adminMiddleware,
   deleteOrder
 );
+
+// Midtrans
+router.post("/midtrans/notifications", midtransNotification);
 
 module.exports = router;

@@ -31,6 +31,9 @@ const main = async () => {
   }
 
   if (process.env.NODE_ENV === "development") {
+    const genSalt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash("password", genSalt);
+
     // Create User
     const userData = {
       full_name: "User ICP Gahara",
@@ -46,26 +49,6 @@ const main = async () => {
 
     if (user) {
       console.log(`User ${user.email} created ! ✅`);
-    }
-
-    // Create Car
-    const carData = {
-      name: "Honda Jazz",
-      description: "Mobil yang nyaman untuk keluarga",
-      price: 1000000,
-      seats: 5,
-      image: "public/images/honda_jazz.png",
-      type_fuel: "Bensin",
-      type_car: "Family",
-      transmision: "Manual",
-    };
-
-    const car = await prisma.cars.create({
-      data: carData,
-    });
-
-    if (car) {
-      console.log(`Car ${car.name} created ! ✅`);
     }
   }
 

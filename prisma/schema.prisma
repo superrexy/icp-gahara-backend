@@ -26,18 +26,48 @@ model users {
 }
 
 model cars {
-    id          Int      @id @default(autoincrement())
-    name        String   @db.VarChar(255)
-    description String   @db.VarChar(255)
-    price       Float    @db.Float
-    seats       Int      @db.Int
-    image       String   @db.VarChar(255)
-    type_fuel   String   @db.VarChar(255)
-    type_car    String   @db.VarChar(255)
-    transmision String   @db.VarChar(255)
-    created_at  DateTime @default(now())
-    updated_at  DateTime @updatedAt
-    orders      orders[]
+    id             Int              @id @default(autoincrement())
+    name           String           @db.VarChar(255)
+    description    String           @db.VarChar(255)
+    seats          Int              @db.Int
+    type_fuel      String           @db.VarChar(255)
+    type_car       String           @db.VarChar(255)
+    transmision    String           @db.VarChar(255)
+    created_at     DateTime         @default(now())
+    updated_at     DateTime         @updatedAt
+    orders         orders[]
+    car_day_price  car_day_price?
+    car_hour_price car_hour_price[]
+    car_images     car_images[]
+}
+
+model car_images {
+    id         Int      @id @default(autoincrement())
+    image      String   @db.VarChar(255)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    car_id     Int
+    car        cars     @relation(fields: [car_id], references: [id], onDelete: Cascade)
+}
+
+model car_day_price {
+    id         Int      @id @default(autoincrement())
+    price      Float    @db.Float
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    car_id     Int      @unique
+    car        cars     @relation(fields: [car_id], references: [id], onDelete: Cascade)
+}
+
+model car_hour_price {
+    id         Int      @id @default(autoincrement())
+    name       String   @db.VarChar(255)
+    price      Float    @db.Float
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    car_id     Int
+    car        cars     @relation(fields: [car_id], references: [id], onDelete: Cascade)
+    orders     orders[]
 }
 
 model location {
@@ -49,26 +79,50 @@ model location {
     updated_at DateTime @updatedAt
 }
 
+enum RentType {
+    DAY
+    HOUR
+}
+
 model orders {
-    id              Int      @id @default(autoincrement())
-    name_rent       String   @db.VarChar(255)
-    no_ktp          String   @db.VarChar(255)
-    address         String?  @db.VarChar(255)
-    phone           String   @db.VarChar(255)
-    rental_purposes String   @db.VarChar(255)
-    start_date      DateTime @db.Date
-    end_date        DateTime @db.Date
-    total_price     Float    @db.Float
-    status          Status   @default(ACTIVE)
+    id              Int             @id @default(autoincrement())
+    name_rent       String          @db.VarChar(255)
+    no_ktp          String          @db.VarChar(255)
+    address         String?         @db.VarChar(255)
+    phone           String          @db.VarChar(255)
+    rental_purposes String          @db.VarChar(255)
+    start_date      DateTime?       @db.Date
+    end_date        DateTime?       @db.Date
+    total_price     Float           @db.Float
+    status          Status          @default(NOTPAID)
+    snap_token      String?         @db.VarChar(255)
+    rent_type       RentType
     car_id          Int
-    car             cars     @relation(fields: [car_id], references: [id])
+    car             cars            @relation(fields: [car_id], references: [id], onDelete: Cascade)
+    rent_hour_id    Int?
+    rent_hour       car_hour_price? @relation(fields: [rent_hour_id], references: [id], onDelete: Cascade)
     user_id         Int
-    user            users    @relation(fields: [user_id], references: [id])
-    created_at      DateTime @default(now())
-    updated_at      DateTime @updatedAt
+    user            users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    created_at      DateTime        @default(now())
+    updated_at      DateTime        @updatedAt
+    payment         payment[]
 }
 
 enum Status {
     ACTIVE
     INACTIVE
+    NOTPAID
+    EXPIRED
+}
+
+model payment {
+    id         Int      @id @default(autoincrement())
+    order_id   Int
+    order      orders   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+    bank       String?  @db.VarChar(255)
+    va_number  String?  @db.VarChar(255)
+    action_url String?  @db.VarChar(255)
+    expired_at DateTime @db.DateTime()
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
 }
