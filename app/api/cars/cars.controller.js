@@ -134,7 +134,9 @@ module.exports = {
         });
 
         if (prices_hour) {
-          const prices = prices_hour.map((price) => {
+          const prices_hour_array = JSON.parse(prices_hour);
+
+          const prices = prices_hour_array.map((price) => {
             return {
               name: price.name,
               price: Number(price.price),

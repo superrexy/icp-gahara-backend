@@ -30,28 +30,6 @@ const main = async () => {
     }
   }
 
-  if (process.env.NODE_ENV === "development") {
-    const genSalt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash("password", genSalt);
-
-    // Create User
-    const userData = {
-      full_name: "User ICP Gahara",
-      no_ktp: "1234567890654321",
-      email: "user@icp-gahara.com",
-      password: hashPassword,
-      role: "user",
-    };
-
-    const user = await prisma.users.create({
-      data: userData,
-    });
-
-    if (user) {
-      console.log(`User ${user.email} created ! ✅`);
-    }
-  }
-
   //   Check Location on Database
   const checkLocation = await prisma.location.findFirst();
 
